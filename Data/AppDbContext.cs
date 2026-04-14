@@ -10,5 +10,6 @@ namespace TopUpMVC.Data
         }
 
         public DbSet<TopUp> TopUps { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

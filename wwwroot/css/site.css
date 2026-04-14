@@ -222,7 +222,7 @@ html, body {
 
 .game-card {
     border-radius: 16px;
-    padding: 24px 16px;
+    padding: 0;
     text-align: center;
     height: 100%;
     transition: transform 0.2s, box-shadow 0.2s;
@@ -230,6 +230,9 @@ html, body {
     flex-direction: column;
     align-items: center;
     gap: 8px;
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
 }
 
 .game-card:hover {
@@ -408,4 +411,98 @@ html, body {
 @media (max-width: 768px) {
     .sidebar { min-height: auto; }
     .topbar { position: relative; }
+}
+
+/* ── Welcome Banner ── */
+.welcome-banner {
+    background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(252,231,243,0.7));
+    border: 1px solid rgba(244,114,182,0.3);
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 14px;
+    color: #1e293b;
+    backdrop-filter: blur(6px);
+}
+
+.text-pink { color: #ec4899 !important; }
+
+.section-heading {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #6b7280;
+}
+
+/* ── Game card image ── */
+.game-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 16px 16px 0 0;
+    position: relative;
+    display: block;
+}
+
+.game-card {
+    border-radius: 16px;
+    padding: 0;
+    text-align: center;
+    height: 100%;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+    min-height: 200px;
+    padding-bottom: 16px;
+}
+
+.game-card-name {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    margin-top: 8px;
+}
+
+.game-card-currency {
+    font-size: 11px;
+    opacity: 0.8;
+}
+}
+
+/* ── Sidebar user badge ── */
+.sidebar-user-badge {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1d4ed8;
+    background: rgba(219,234,254,0.9);
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── Register button ── */
+.btn-register {
+    display: block;
+    text-align: center;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #a5f3fc, #38bdf8);
+    color: #0c4a6e;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+
+.btn-register:hover {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color: #ffffff;
+    text-decoration: none;
+    transform: translateY(-1px);
 }

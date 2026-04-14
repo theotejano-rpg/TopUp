@@ -11,6 +11,7 @@
 
 @{
     var role = Context.Session.GetString("Role") ?? "Guest";
+    var username = Context.Session.GetString("Username") ?? "Guest";
 }
 
 <div class="container-fluid p-0">
@@ -29,12 +30,7 @@
                 <div class="sidebar-section">Top Up</div>
                 <a asp-controller="TopUp" asp-action="Create" class="sidebar-link">🎮 Buy Top Up</a>
                 <a asp-controller="Transaction" asp-action="Index" class="sidebar-link">📋 Transactions</a>
-
-                <div class="sidebar-section">Games</div>
-                <a asp-controller="Transaction" asp-action="Index" asp-route-game="Honkai: Star Rail" class="sidebar-link">⭐ Honkai: Star Rail</a>
-                <a asp-controller="Transaction" asp-action="Index" asp-route-game="Genshin Impact" class="sidebar-link">🌿 Genshin Impact</a>
-                <a asp-controller="Transaction" asp-action="Index" asp-route-game="Wuthering Waves" class="sidebar-link">🌊 Wuthering Waves</a>
-                <a asp-controller="Transaction" asp-action="Index" asp-route-game="Zenless Zone Zero" class="sidebar-link">⚡ Zenless Zone Zero</a>
+                
             </nav>
 
             <div class="sidebar-bottom">
@@ -43,10 +39,16 @@
                     <div class="sidebar-admin-badge">🔑 Admin Mode</div>
                     <a asp-controller="Account" asp-action="Logout" class="btn-logout">Logout</a>
                 }
+                else if (role == "User")
+                {
+                    <div class="sidebar-user-badge">🎮 @username</div>
+                    <a asp-controller="Account" asp-action="Logout" class="btn-logout">Logout</a>
+                }
                 else
                 {
                     <div class="sidebar-guest-badge">👤 Guest Mode</div>
-                    <a asp-controller="Account" asp-action="Login" class="btn-login">Login as Admin</a>
+                    <a asp-controller="Account" asp-action="Login" class="btn-login">🔑 Login</a>
+                    <a asp-controller="Account" asp-action="Register" class="btn-register">📝 Register</a>
                 }
             </div>
         </div>
@@ -58,6 +60,10 @@
                     @if (role == "Admin")
                     {
                         <span class="badge bg-danger">🔑 Admin</span>
+                    }
+                    else if (role == "User")
+                    {
+                        <span class="badge bg-primary">🎮 @username</span>
                     }
                     else
                     {

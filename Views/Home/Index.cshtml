@@ -1,31 +1,42 @@
 @{
     ViewData["Title"] = "Dashboard";
     var role = ViewBag.Role as string ?? "Guest";
+    var username = ViewBag.Username as string ?? "Guest";
 }
 
+<div class="welcome-banner mb-4">
+    <div class="welcome-text">
+        @if (role == "Admin")
+        {
+            <span>👑 Welcome back, <strong>Admin</strong>!</span>
+        }
+        else if (role == "User")
+        {
+            <span>🎮 Welcome back, <strong>@username</strong>!</span>
+        }
+        else
+        {
+            <span>👋 Welcome to <strong>GameTop PH</strong>! <a asp-controller="Account" asp-action="Register" class="text-pink fw-bold">Create an account</a> or <a asp-controller="Account" asp-action="Login" class="text-pink fw-bold">log in</a> to get started.</span>
+        }
+    </div>
+</div>
+
 <div class="row g-4 mb-4">
-    <div class="col-sm-12 col-md-3">
+    <div class="col-sm-12 col-md-4">
         <div class="stat-card text-center">
             <div class="stat-icon">🎮</div>
             <div class="stat-label">Total Top Ups</div>
             <div class="stat-value text-primary">@ViewBag.TotalTopUps</div>
         </div>
     </div>
-    <div class="col-sm-12 col-md-3">
-        <div class="stat-card text-center">
-            <div class="stat-icon">💰</div>
-            <div class="stat-label">Total Revenue</div>
-            <div class="stat-value text-success" style="font-size:1.4rem;">₱@((decimal)ViewBag.TotalRevenue).ToString("N2")</div>
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-3">
+    <div class="col-sm-12 col-md-4">
         <div class="stat-card text-center">
             <div class="stat-icon">⏳</div>
             <div class="stat-label">Pending</div>
             <div class="stat-value text-warning">@ViewBag.PendingCount</div>
         </div>
     </div>
-    <div class="col-sm-12 col-md-3">
+    <div class="col-sm-12 col-md-4">
         <div class="stat-card text-center">
             <div class="stat-icon">✅</div>
             <div class="stat-label">Completed</div>
@@ -34,10 +45,26 @@
     </div>
 </div>
 
-<div class="row g-4 mb-4">
+@if (role == "Admin")
+{
+    <div class="row g-4 mb-4">
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="stat-card text-center">
+                <div class="stat-icon">💰</div>
+                <div class="stat-label">Total Revenue</div>
+                <div class="stat-value text-success" style="font-size:1.5rem;">
+                    ₱@(((decimal)ViewBag.TotalRevenue).ToString("N2"))
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<h6 class="section-heading mb-3">🕹️ Available Games</h6>
+<div class="row g-4 mb-2">
     <div class="col-sm-12 col-md-6 col-lg-3">
         <div class="game-card hsr">
-            <div class="game-card-icon">⭐</div>
+            <img src="/images/hsr.png" class="game-img" alt="Honkai: Star Rail" />
             <div class="game-card-name">Honkai: Star Rail</div>
             <div class="game-card-currency">Stellar Jade</div>
             <a asp-controller="TopUp" asp-action="Create" class="btn-game">Top Up Now</a>
@@ -45,7 +72,7 @@
     </div>
     <div class="col-sm-12 col-md-6 col-lg-3">
         <div class="game-card genshin">
-            <div class="game-card-icon">🌿</div>
+            <img src="/images/genshin.jpg" class="game-img" alt="Genshin Impact" />
             <div class="game-card-name">Genshin Impact</div>
             <div class="game-card-currency">Genesis Crystals</div>
             <a asp-controller="TopUp" asp-action="Create" class="btn-game">Top Up Now</a>
@@ -53,7 +80,7 @@
     </div>
     <div class="col-sm-12 col-md-6 col-lg-3">
         <div class="game-card wuwa">
-            <div class="game-card-icon">🌊</div>
+            <img src="/images/wuwa.png" class="game-img" alt="Wuthering Waves" />
             <div class="game-card-name">Wuthering Waves</div>
             <div class="game-card-currency">Lunite</div>
             <a asp-controller="TopUp" asp-action="Create" class="btn-game">Top Up Now</a>
@@ -61,31 +88,10 @@
     </div>
     <div class="col-sm-12 col-md-6 col-lg-3">
         <div class="game-card zzz">
-            <div class="game-card-icon">⚡</div>
+            <img src="/images/zzz.png" class="game-img" alt="Zenless Zone Zero" />
             <div class="game-card-name">Zenless Zone Zero</div>
             <div class="game-card-currency">Polychrome</div>
             <a asp-controller="TopUp" asp-action="Create" class="btn-game">Top Up Now</a>
-        </div>
-    </div>
-</div>
-
-<div class="row g-4">
-    <div class="col-sm-12 col-md-6">
-        <div class="dash-card h-100">
-            <div class="dash-card-header">🎮 Buy Top Up</div>
-            <div class="dash-card-body text-center">
-                <p class="text-muted small">Submit a top-up request for any of our supported games.</p>
-                <a asp-controller="TopUp" asp-action="Create" class="btn btn-pink btn-sm">🎮 Buy Now</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-6">
-        <div class="dash-card h-100">
-            <div class="dash-card-header">📋 Transactions</div>
-            <div class="dash-card-body text-center">
-                <p class="text-muted small">View all top-up transactions and their current status.</p>
-                <a asp-controller="Transaction" asp-action="Index" class="btn btn-skyblue btn-sm">📋 View All</a>
-            </div>
         </div>
     </div>
 </div>
