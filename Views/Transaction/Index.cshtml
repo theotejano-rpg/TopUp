@@ -1,0 +1,159 @@
+@model List<TopUp>
+
+@{
+    ViewData["Title"] = "Transactions";
+    var role = ViewBag.Role as string ?? "Guest";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <div>
+        <span class="badge bg-secondary">📋 Total: @Model.Count</span>
+        @if (Model.Count > 0)
+        {
+            <span class="badge bg-success ms-2">₱@Model.Sum(t => t.Amount).ToString("N2")</span>
+        }
+    </div>
+    <a asp-controller="TopUp" asp-action="Create" class="btn btn-pink btn-sm">🎮 New Top Up</a>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body py-2">
+        <form asp-action="Index" method="get">
+            <div class="row g-2">
+                <div class="col-sm-12 col-md-4">
+                    <input type="text" name="search" value="@ViewBag.Search"
+                           class="form-control form-control-sm"
+                           placeholder="🔍 Search player name, ID or email..." />
+                </div>
+                <div class="col-sm-12 col-md-3">
+                    <select name="game" class="form-select form-select-sm">
+                        <option value="">🎮 All Games</option>
+                        <option value="Honkai: Star Rail" selected="@(ViewBag.Game == "Honkai: Star Rail" ? "selected" : null)">⭐ Honkai: Star Rail</option>
+                        <option value="Genshin Impact" selected="@(ViewBag.Game == "Genshin Impact" ? "selected" : null)">🌿 Genshin Impact</option>
+                        <option value="Wuthering Waves" selected="@(ViewBag.Game == "Wuthering Waves" ? "selected" : null)">🌊 Wuthering Waves</option>
+                        <option value="Zenless Zone Zero" selected="@(ViewBag.Game == "Zenless Zone Zero" ? "selected" : null)">⚡ Zenless Zone Zero</option>
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <select name="status" class="form-select form-select-sm">
+                        <option value="">📂 All Status</option>
+                        <option value="Pending" selected="@(ViewBag.Status == "Pending" ? "selected" : null)">⏳ Pending</option>
+                        <option value="Completed" selected="@(ViewBag.Status == "Completed" ? "selected" : null)">✅ Completed</option>
+                        <option value="Failed" selected="@(ViewBag.Status == "Failed" ? "selected" : null)">❌ Failed</option>
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-3 d-flex gap-1">
+                    <button type="submit" class="btn btn-skyblue btn-sm w-100">Filter</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">✖</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info text-center">
+        📭 No transactions found. <a asp-controller="TopUp" asp-action="Create" class="alert-link">Click here to buy a top up.</a>
+    </div>
+}
+else
+{
+    <div class="card shadow-sm">
+        <div class="dash-card-header">📋 Top Up Transactions</div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered mb-0">
+                    <thead class="table-pink">
+                        <tr>
+                            <th>ID</th>
+                            <th>👤 Player</th>
+                            <th>📧 Email</th>
+                            <th>🎮 Game</th>
+                            <th>📦 Package</th>
+                            <th>💰 Amount</th>
+                            <th>📊 Status</th>
+                            <th>📅 Date</th>
+                            @if (role == "Admin")
+                            {
+                                <th>⚙️ Action</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var t in Model)
+                        {
+                            <tr>
+                                <td><span class="badge bg-light text-dark border">#@t.Id</span></td>
+                                <td>
+                                    <div class="fw-semibold">@t.PlayerName</div>
+                                    <div class="text-muted small">UID: @t.PlayerId</div>
+                                </td>
+                                <td class="small">@t.Email</td>
+                                <td>
+                                    @if (t.Game == "Honkai: Star Rail")
+                                    {
+                                        <span class="badge badge-hsr">⭐ HSR</span>
+                                    }
+                                    else if (t.Game == "Genshin Impact")
+                                    {
+                                        <span class="badge badge-genshin">🌿 Genshin</span>
+                                    }
+                                    else if (t.Game == "Wuthering Waves")
+                                    {
+                                        <span class="badge badge-wuwa">🌊 WuWa</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-zzz">⚡ ZZZ</span>
+                                    }
+                                </td>
+                                <td class="small">@t.Package</td>
+                                <td class="fw-bold text-success">₱@t.Amount.ToString("N2")</td>
+                                <td>
+                                    @if (t.Status == "Completed")
+                                    {
+                                        <span class="badge bg-success">✅ Completed</span>
+                                    }
+                                    else if (t.Status == "Failed")
+                                    {
+                                        <span class="badge bg-danger">❌ Failed</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">⏳ Pending</span>
+                                    }
+                                </td>
+                                <td class="text-muted small">@t.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                @if (role == "Admin")
+                                {
+                                    <td>
+                                        <div class="d-flex gap-1 flex-wrap">
+                                            <form asp-action="UpdateStatus" method="post" style="display:inline;">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@t.Id" />
+                                                <input type="hidden" name="status" value="Completed" />
+                                                <button type="submit" class="btn btn-success btn-sm">✅</button>
+                                            </form>
+                                            <form asp-action="UpdateStatus" method="post" style="display:inline;">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@t.Id" />
+                                                <input type="hidden" name="status" value="Failed" />
+                                                <button type="submit" class="btn btn-warning btn-sm">❌</button>
+                                            </form>
+                                            <form asp-action="Delete" asp-route-id="@t.Id" method="post" style="display:inline;">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                        onclick="return confirm('Delete transaction #@t.Id?')">🗑️</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

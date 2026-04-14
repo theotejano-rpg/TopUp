@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — GameTop PH</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+
+@{
+    var role = Context.Session.GetString("Role") ?? "Guest";
+}
+
+<div class="container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+
+        <div class="col-sm-12 col-md-3 col-lg-2 sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">GT</div>
+                <div class="sidebar-title">GameTop PH</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">Main</div>
+                <a asp-controller="Home" asp-action="Index" class="sidebar-link">📊 Dashboard</a>
+
+                <div class="sidebar-section">Top Up</div>
+                <a asp-controller="TopUp" asp-action="Create" class="sidebar-link">🎮 Buy Top Up</a>
+                <a asp-controller="Transaction" asp-action="Index" class="sidebar-link">📋 Transactions</a>
+
+                <div class="sidebar-section">Games</div>
+                <a asp-controller="Transaction" asp-action="Index" asp-route-game="Honkai: Star Rail" class="sidebar-link">⭐ Honkai: Star Rail</a>
+                <a asp-controller="Transaction" asp-action="Index" asp-route-game="Genshin Impact" class="sidebar-link">🌿 Genshin Impact</a>
+                <a asp-controller="Transaction" asp-action="Index" asp-route-game="Wuthering Waves" class="sidebar-link">🌊 Wuthering Waves</a>
+                <a asp-controller="Transaction" asp-action="Index" asp-route-game="Zenless Zone Zero" class="sidebar-link">⚡ Zenless Zone Zero</a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                @if (role == "Admin")
+                {
+                    <div class="sidebar-admin-badge">🔑 Admin Mode</div>
+                    <a asp-controller="Account" asp-action="Logout" class="btn-logout">Logout</a>
+                }
+                else
+                {
+                    <div class="sidebar-guest-badge">👤 Guest Mode</div>
+                    <a asp-controller="Account" asp-action="Login" class="btn-login">Login as Admin</a>
+                }
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-9 col-lg-10 main-area">
+            <div class="topbar">
+                <div class="topbar-title">@ViewData["Title"]</div>
+                <div>
+                    @if (role == "Admin")
+                    {
+                        <span class="badge bg-danger">🔑 Admin</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">👤 Guest</span>
+                    }
+                </div>
+            </div>
+
+            <div class="page-content">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        ✅ @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        ❌ @TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+                @RenderBody()
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

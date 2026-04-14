@@ -1,0 +1,91 @@
+@{
+    ViewData["Title"] = "Dashboard";
+    var role = ViewBag.Role as string ?? "Guest";
+}
+
+<div class="row g-4 mb-4">
+    <div class="col-sm-12 col-md-3">
+        <div class="stat-card text-center">
+            <div class="stat-icon">🎮</div>
+            <div class="stat-label">Total Top Ups</div>
+            <div class="stat-value text-primary">@ViewBag.TotalTopUps</div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-3">
+        <div class="stat-card text-center">
+            <div class="stat-icon">💰</div>
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-value text-success" style="font-size:1.4rem;">₱@((decimal)ViewBag.TotalRevenue).ToString("N2")</div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-3">
+        <div class="stat-card text-center">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-label">Pending</div>
+            <div class="stat-value text-warning">@ViewBag.PendingCount</div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-3">
+        <div class="stat-card text-center">
+            <div class="stat-icon">✅</div>
+            <div class="stat-label">Completed</div>
+            <div class="stat-value text-success">@ViewBag.CompletedCount</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="game-card hsr">
+            <div class="game-card-icon">⭐</div>
+            <div class="game-card-name">Honkai: Star Rail</div>
+            <div class="game-card-currency">Stellar Jade</div>
+            <a asp-controller="TopUp" asp-action="Create" class="btn-game">Top Up Now</a>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="game-card genshin">
+            <div class="game-card-icon">🌿</div>
+            <div class="game-card-name">Genshin Impact</div>
+            <div class="game-card-currency">Genesis Crystals</div>
+            <a asp-controller="TopUp" asp-action="Create" class="btn-game">Top Up Now</a>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="game-card wuwa">
+            <div class="game-card-icon">🌊</div>
+            <div class="game-card-name">Wuthering Waves</div>
+            <div class="game-card-currency">Lunite</div>
+            <a asp-controller="TopUp" asp-action="Create" class="btn-game">Top Up Now</a>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="game-card zzz">
+            <div class="game-card-icon">⚡</div>
+            <div class="game-card-name">Zenless Zone Zero</div>
+            <div class="game-card-currency">Polychrome</div>
+            <a asp-controller="TopUp" asp-action="Create" class="btn-game">Top Up Now</a>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-sm-12 col-md-6">
+        <div class="dash-card h-100">
+            <div class="dash-card-header">🎮 Buy Top Up</div>
+            <div class="dash-card-body text-center">
+                <p class="text-muted small">Submit a top-up request for any of our supported games.</p>
+                <a asp-controller="TopUp" asp-action="Create" class="btn btn-pink btn-sm">🎮 Buy Now</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-6">
+        <div class="dash-card h-100">
+            <div class="dash-card-header">📋 Transactions</div>
+            <div class="dash-card-body text-center">
+                <p class="text-muted small">View all top-up transactions and their current status.</p>
+                <a asp-controller="Transaction" asp-action="Index" class="btn btn-skyblue btn-sm">📋 View All</a>
+            </div>
+        </div>
+    </div>
+</div>

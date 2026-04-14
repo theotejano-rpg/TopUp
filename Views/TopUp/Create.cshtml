@@ -1,0 +1,141 @@
+@model TopUp
+
+@{
+    ViewData["Title"] = "Buy Top Up";
+}
+
+<div class="row justify-content-center">
+    <div class="col-sm-12 col-md-10 col-lg-8">
+        <div class="card shadow-sm">
+            <div class="dash-card-header">🎮 Top Up Order Form</div>
+            <div class="card-body p-4">
+
+                <form asp-action="Create" method="post" id="topupForm">
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3"></div>
+
+                    <div class="row g-3">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="PlayerName" class="form-label">👤 Player Name</label>
+                                <input asp-for="PlayerName" class="form-control" placeholder="Your in-game name" />
+                                <span asp-validation-for="PlayerName" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="PlayerId" class="form-label">🪪 Player ID / UID</label>
+                                <input asp-for="PlayerId" class="form-control" placeholder="Your game UID" />
+                                <span asp-validation-for="PlayerId" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">📧 Email Address</label>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="For order confirmation" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Game" class="form-label">🎮 Select Game</label>
+                        <select asp-for="Game" class="form-select" id="gameSelect" onchange="updatePackages()">
+                            <option value="">-- Select Game --</option>
+                            <option value="Honkai: Star Rail">⭐ Honkai: Star Rail</option>
+                            <option value="Genshin Impact">🌿 Genshin Impact</option>
+                            <option value="Wuthering Waves">🌊 Wuthering Waves</option>
+                            <option value="Zenless Zone Zero">⚡ Zenless Zone Zero</option>
+                        </select>
+                        <span asp-validation-for="Game" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Package" class="form-label">📦 Select Package</label>
+                        <select asp-for="Package" class="form-select" id="packageSelect" onchange="updateAmount()">
+                            <option value="">-- Select Game First --</option>
+                        </select>
+                        <span asp-validation-for="Package" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Amount" class="form-label">💰 Amount (₱)</label>
+                        <input asp-for="Amount" type="number" step="0.01" class="form-control" id="amountField" placeholder="Auto-filled" readonly />
+                        <span asp-validation-for="Amount" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-success">💾 Submit Order</button>
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">✖ Cancel</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        const packages = {
+            "Honkai: Star Rail": [
+                { name: "60 Stellar Jade", amount: 29 },
+                { name: "300 Stellar Jade", amount: 149 },
+                { name: "980 Stellar Jade", amount: 449 },
+                { name: "1980 Stellar Jade", amount: 899 },
+                { name: "3280 Stellar Jade", amount: 1499 },
+                { name: "6480 Stellar Jade", amount: 2999 }
+            ],
+            "Genshin Impact": [
+                { name: "60 Genesis Crystals", amount: 29 },
+                { name: "300 Genesis Crystals", amount: 149 },
+                { name: "980 Genesis Crystals", amount: 449 },
+                { name: "1980 Genesis Crystals", amount: 899 },
+                { name: "3280 Genesis Crystals", amount: 1499 },
+                { name: "6480 Genesis Crystals", amount: 2999 }
+            ],
+            "Wuthering Waves": [
+                { name: "60 Lunite", amount: 29 },
+                { name: "300 Lunite", amount: 149 },
+                { name: "980 Lunite", amount: 449 },
+                { name: "1980 Lunite", amount: 899 },
+                { name: "3280 Lunite", amount: 1499 },
+                { name: "6480 Lunite", amount: 2999 }
+            ],
+            "Zenless Zone Zero": [
+                { name: "60 Polychrome", amount: 29 },
+                { name: "300 Polychrome", amount: 149 },
+                { name: "980 Polychrome", amount: 449 },
+                { name: "1980 Polychrome", amount: 899 },
+                { name: "3280 Polychrome", amount: 1499 },
+                { name: "6480 Polychrome", amount: 2999 }
+            ]
+        };
+
+        function updatePackages() {
+            const game = document.getElementById("gameSelect").value;
+            const pkgSelect = document.getElementById("packageSelect");
+            const amountField = document.getElementById("amountField");
+
+            pkgSelect.innerHTML = '<option value="">-- Select Package --</option>';
+            amountField.value = "";
+
+            if (packages[game]) {
+                packages[game].forEach(pkg => {
+                    const opt = document.createElement("option");
+                    opt.value = pkg.name;
+                    opt.setAttribute("data-amount", pkg.amount);
+                    opt.textContent = pkg.name + " — ₱" + pkg.amount;
+                    pkgSelect.appendChild(opt);
+                });
+            }
+        }
+
+        function updateAmount() {
+            const pkgSelect = document.getElementById("packageSelect");
+            const selected = pkgSelect.options[pkgSelect.selectedIndex];
+            const amount = selected ? selected.getAttribute("data-amount") : "";
+            document.getElementById("amountField").value = amount || "";
+        }
+    </script>
+}
