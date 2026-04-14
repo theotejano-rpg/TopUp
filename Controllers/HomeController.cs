@@ -17,13 +17,15 @@ namespace TopUpMVC.Controllers
             var role = HttpContext.Session.GetString("Role") ?? "Guest";
             ViewBag.Role = role;
             ViewBag.Username = HttpContext.Session.GetString("Username") ?? "Guest";
-            ViewBag.TotalTopUps = _context.TopUps.Count();
+            ViewBag.TotalTopUps = _context.TopUps.Count(t => t.Status != "Failed");
             ViewBag.PendingCount = _context.TopUps.Count(t => t.Status == "Pending");
             ViewBag.CompletedCount = _context.TopUps.Count(t => t.Status == "Completed");
 
-            // Revenue only for admin
+            // Revenue only for admin — only completed transactions
             if (role == "Admin")
-                ViewBag.TotalRevenue = _context.TopUps.Sum(t => (decimal?)t.Amount) ?? 0m;
+                ViewBag.TotalRevenue = _context.TopUps
+                    .Where(t => t.Status == "Completed")
+                    .Sum(t => (decimal?)t.Amount) ?? 0m;
 
             return View();
         }

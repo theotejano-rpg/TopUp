@@ -36,6 +36,12 @@
                     </div>
 
                     <div class="mb-3">
+                        <label asp-for="Age" class="form-label">🔢 Age</label>
+                        <input asp-for="Age" type="number" class="form-control" min="1" max="60" placeholder="Enter your age" />
+                        <span asp-validation-for="Age" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
                         <label asp-for="Password" class="form-label">🔒 Password</label>
                         <input asp-for="Password" type="password" class="form-control" placeholder="At least 6 characters" />
                         <span asp-validation-for="Password" class="text-danger small"></span>
