@@ -13,7 +13,6 @@ namespace TopUpMVC.Controllers
             _context = context;
         }
 
-        // ─── LOGIN ────────────────────────────────────────────────────────────
         [HttpGet]
         public IActionResult Login()
         {
@@ -25,7 +24,6 @@ namespace TopUpMVC.Controllers
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
-            // Check hardcoded admin
             if (username == "admin" && password == "admin123")
             {
                 HttpContext.Session.SetString("Role", "Admin");
@@ -34,7 +32,6 @@ namespace TopUpMVC.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            // Check registered users in DB
             var user = _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
             if (user != null)
             {
@@ -48,7 +45,6 @@ namespace TopUpMVC.Controllers
             return View();
         }
 
-        // ─── REGISTER ─────────────────────────────────────────────────────────
         [HttpGet]
         public IActionResult Register()
         {
@@ -63,14 +59,12 @@ namespace TopUpMVC.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            // Check if username already taken
             if (_context.Users.Any(u => u.Username == model.Username))
             {
-                ModelState.AddModelError("Username", "That username is already taken. Please choose another.");
+                ModelState.AddModelError("Username", "That username is already taken.");
                 return View(model);
             }
 
-            // Check if email already registered
             if (_context.Users.Any(u => u.Email == model.Email))
             {
                 ModelState.AddModelError("Email", "An account with that email already exists.");
@@ -87,7 +81,6 @@ namespace TopUpMVC.Controllers
             return RedirectToAction("Login");
         }
 
-        // ─── LOGOUT ───────────────────────────────────────────────────────────
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
